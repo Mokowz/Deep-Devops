@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Copy a file to a remote host
+file_path=$1
+ip=$2
+user=$3
+key_path=$4
+
+scp -i $key_path $file_path $user@$ip:~/
