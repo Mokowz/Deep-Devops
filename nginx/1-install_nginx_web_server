@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Install and restart nginx on our server
+sudo apt-get update
+sudo apt-get install -y nginx
+
+sudo ufw allow 'Nginx Full'
+
+echo "Hello World I'm Mokowz" | sudo tee /var/www/html/index.html
+
+sudo nginx -t
+sudo systemctl restart nginx
+
+
