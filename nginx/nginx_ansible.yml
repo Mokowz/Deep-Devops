@@ -1,0 +1,56 @@
+---
+- name: Install nginx and Update the Firewall
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Install Nginx
+    apt:
+      name: nginx
+      state: latest
+      update_cache: true
+  - name: Update the Firewall to allow Nginx
+    shell:
+      cmd: ufw allow 'Nginx Full'
+
+- name: Update the index and error pages
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Update the index file
+    copy:
+      content: "Hey There, this is the home page"
+      dest: /var/www/html/index.html
+      mode: 0766
+      
+  - name: Update the 404 page
+    copy:
+      content: "There is no page here"
+      dest: /var/www/html/custom_404.html
+      mode: 0766
+
+- name: Configure the nginx
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Edit the server block
+    template:
+      src: default_server
+      dest: /etc/nginx/sites-enabled/default
+
+- name: Test and Restart Nginx
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Test Nginx
+    shell:
+      cmd: nginx -t
+
+  - name: Restart Nginx
+    service:
+      name: nginx
+      enabled: true
+      state: restarted 
