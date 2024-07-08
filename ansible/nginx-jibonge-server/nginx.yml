@@ -14,16 +14,6 @@
     shell:
       cmd: ufw allow 'Nginx Full'
 
-  - name: Configure the nginx server
-    template:
-      src: nginx_conf
-      dest: /etc/nginx/sites-available/jibonge
-
-  - name: Create a symbolic link
-    shell:
-      cmd: ln -s /etc/nginx/sites-available/jibonge /etc/nginx/sites-enabled
-
-
   - name: Test and Restart Nginx
     shell: 
       cmd: nginx -t && systemctl restart nginx
