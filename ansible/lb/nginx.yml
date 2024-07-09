@@ -1,0 +1,40 @@
+---
+- name: Configure the web servers
+  hosts: servers
+  become: true
+  tags: web
+
+  tasks:
+  - name: Install Nginx
+    apt:
+      name: nginx
+      state: latest
+      update_cache: true
+
+  - name: Update the firewall
+    shell:
+      cmd: ufw allow 80
+
+  - name: Update the home page of nginx
+    shell:
+      cmd: echo "Hello from us" > /var/www/html/index.html
+
+  - name: Add a new header
+    tags: header
+    shell:
+      cmd: sed -i "/listen 80 default_server;/a add_header X-Served-By \$HOSTNAME;" /etc/nginx/sites-available/default
+
+  - name: Test and Restart Nginx
+    tags: nginx
+    shell: nginx -t && systemctl restart nginx
+
+- name: Install haproxy on my load balancer
+  become: true
+  hosts: lb
+  tags: lb
+
+  tasks:
+  - name: Install Haproxy
+    shell:
+      cmd: apt-get update && apt-get install -y haproxy=2.8.\*
+        
