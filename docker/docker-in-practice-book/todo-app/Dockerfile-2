@@ -1,0 +1,7 @@
+FROM debian
+
+RUN mkdir -p /opt/hello
+
+ADD example.tar /opt/hello/
+
+RUN ls -lR /opt/hello
