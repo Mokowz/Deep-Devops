@@ -1,15 +1,18 @@
-FROM node
+# Build Stage
+FROM node:23-bookworm-slim
 
-LABEL org.opencontainers.image.authors="ronniemokaya30@gmail.com"
-
-RUN git clone -q https://github.com/docker-in-practice/todo.git
+RUN <<EOF
+apk update
+apk add git
+git clone -q https://github.com/docker-in-practice/todo.git
+EOF
 
 # Move to the working directory
 WORKDIR /todo
-
-ARG CACHEBUST=no
 RUN npm install > /dev/null
 
+# Runtime Stage
+FROM node:
 EXPOSE 8000
 
 # Command to run when the image is run
